@@ -227,7 +227,7 @@ int dup2(int oldfd, int newfd);
 Duplicate the file descriptor, I did a loop to duplicate the three file descriptors (in, out and err) with the socket file descriptor.
 
 ```nasm
-        mov ebx, eax            ; oldfd = clientfd, eax es clientfd, resultado de accept
+        mov ebx, eax            ; oldfd = clientfd
         xor ecx, ecx            ; ecx = newfd
 loop:
         mov al, 0x3f            ; syscall dup2
@@ -324,7 +324,7 @@ _start:
         int 0x80
 
         ; int dup2(int oldfd, int newfd);
-        mov ebx, eax            ; oldfd = clientfd, eax es clientfd, resultado de accept
+        mov ebx, eax            ; oldfd = clientfd
         xor ecx, ecx            ; ecx = newfd      
 loop:
         mov al, 0x3f            ; syscall dup2    
