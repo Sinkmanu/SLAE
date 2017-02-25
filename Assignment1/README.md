@@ -99,10 +99,15 @@ After, I start to do same in assembly language. But before we need to know what 
 
 
 System syscalls:  /usr/include/i386-linux-gnu/asm/unistd_32.h
+
 Socket syscalls: /usr/include/linux/net.h 
+
 Socket protocols: /usr/include/i386-linux-gnu/bits/socket.h
+
 Socket domains: /usr/include/netinet/in.h
+
 Socket types: /usr/include/i386-linux-gnu/bits/socket_type.h
+
 
 #### Create the socket
 ```c
