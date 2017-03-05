@@ -1,4 +1,4 @@
-# Assignment #2: Reverse Bind TCP 
+# Assignment #2: Reverse Shell TCP 
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:
 
