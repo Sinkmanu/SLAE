@@ -15,7 +15,7 @@ Student ID: SLAE-858
 
 ### Solution
 
-First, What is a EggHunter shellcode?
+First, What is an EggHunter shellcode?
 
 A EggHunter is a little program that It is used to find a "pattern". In our case of study, our egghunter look for the *pattern* because after is the *shellcode*. It is very important and useful when we don't know where is the shellcode. So the egghunter program will look in all the memory position to find the "EGG" and run the shellcode.
 
