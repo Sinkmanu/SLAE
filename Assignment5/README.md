@@ -1,4 +1,4 @@
-# Assignment #5: Analyse different shellcodes from metasploit
+# Assignment #5: Metasploit Shellcode Analysis
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:
 
@@ -16,9 +16,9 @@ Student ID: SLAE-858
 ### Solution
 
 I choosed the shellcodes:
-1.      linux/x86/chmod                                     Runs chmod on specified file with specified mode
-2.	linux/x86/read_file                                 Read up to 4096 bytes from the local file system and write it back out to the specified file descriptor
-3.      linux/x86/exec                                      Execute an arbitrary command
+1. linux/x86/chmod - Runs chmod on specified file with specified mode
+2. linux/x86/read_file - Read up to 4096 bytes from the local file system and write it back out to the specified file descriptor
+3. linux/x86/exec - Execute an arbitrary command
 
 
 
@@ -149,16 +149,11 @@ unsigned char code[] =
 "\x74\x78\x74\x00\x5b\x68\xb6\x01\x00\x00\x59\xcd\x80\x6a\x01"
 "\x58\xcd\x80";
 
-
 main()
 {
-
         printf("Shellcode Length:  %d\n", strlen(code));
-
         int (*ret)() = (int(*)())code;
-
         ret();
-
 }
 ```
 
@@ -227,6 +222,7 @@ int chmod(const char *pathname, mode_t mode);
 so, eax register will be the syscall, 0xf, the pathname will be in ebx and the mode in ecx register. 
 
 It is very simple to understand shellcode. 
+
 
 
 
@@ -359,14 +355,15 @@ int main()
 
 Compile and run.
 
+```bash
 hiro@HackingLab:~/SLAE/SLAE/EXAMEN/GitHub/SLAE/Assignment5$ gcc -fno-stack-protector -z execstack msf-read_file-shellcode.c -o msf-read_file
 hiro@HackingLab:~/SLAE/SLAE/EXAMEN/GitHub/SLAE/Assignment5$ ./msf-read_file
 Shellcode Length:  4
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
 bin:x:2:2:bin:/bin:/usr/sbin/nologin
-
-....
+...
+```
 
 
 #### linux/x86/exec 
