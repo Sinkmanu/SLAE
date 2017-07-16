@@ -15,7 +15,7 @@ Student ID: SLAE-858
 
 ### Solution
 
-I choosed the shellcodes:
+I chose the shellcodes:
 1. linux/x86/chmod - Runs chmod on specified file with specified mode
 2. linux/x86/read_file - Read up to 4096 bytes from the local file system and write it back out to the specified file descriptor
 3. linux/x86/exec - Execute an arbitrary command
@@ -318,9 +318,9 @@ stepcount 5
 ```
 
 We can see the syscalls:
-0x5 - sys_open Open the file
-0x3 - sys_read Read the file
-0x4 - sys_write Used for write
+* 0x5 - sys_open Open the file
+* 0x3 - sys_read Read the file
+* 0x4 - sys_write Used for write
 
 Very easy to understand reading the assembly code.
 
