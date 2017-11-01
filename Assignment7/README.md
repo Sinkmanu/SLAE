@@ -18,7 +18,7 @@ Student ID: SLAE-858
 To complete the last exercise I have used the [AES encryption algorithm](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) with the block cipher mode CTR (Counter), one of the most recommended modes of encryption. This mode turns a block cipher into a stream cipher. It generates the next keystream block by encrypting successive values of a "counter".  To read more, go to [Wikipedia](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29)
 
 
-So, as I am very comfortable programming on python language, I have used this language to make my crypter/decrypter.
+So, as I am very comfortable programming in Python, I have used this language to make my crypter/decrypter.
 
 
 I have used a module that implement AES in Python, the module is [pyaes](https://github.com/ricmoo/pyaes)
